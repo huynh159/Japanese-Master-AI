@@ -9,7 +9,23 @@ export type AppTab =
   | 'kaiwa'
   | 'sentence-analyzer'
   | 'srs-flashcards'
-  | 'story-reader';
+  | 'story-reader'
+  | 'admin';
+
+export type UserRole = 'student' | 'admin';
+export type AdminTab = 'questions' | 'vocab' | 'stories' | 'stats';
+
+export interface StoryItem {
+  id: string;
+  title: string;
+  jlpt: JlptLevel;
+  content: string;
+  reading: string;
+  translation: string;
+  vocabList?: { word: string; reading: string; meaning: string }[];
+  createdAt?: string;
+}
+
 
 export interface KanjiItem {
   character: string;

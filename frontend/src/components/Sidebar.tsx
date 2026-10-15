@@ -9,7 +9,8 @@ import {
   MessageSquareCode, 
   BrainCircuit, 
   Layers, 
-  BookOpenText 
+  BookOpenText,
+  ShieldCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
     { id: 'sentence-analyzer', label: 'Phân Tích Cú Pháp', icon: <BrainCircuit className="w-5 h-5" /> },
     { id: 'srs-flashcards', label: 'Thẻ Nhớ SRS', icon: <Layers className="w-5 h-5" /> },
     { id: 'story-reader', label: 'Đọc Truyện & Audio', icon: <BookOpenText className="w-5 h-5" /> },
+    { id: 'admin', label: 'Trang Quản Trị', icon: <ShieldCheck className="w-5 h-5 text-amber-400" />, badge: 'ADMIN' },
   ];
 
   return (

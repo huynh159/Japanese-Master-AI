@@ -19,11 +19,17 @@ import { KaiwaChat } from './components/KaiwaChat';
 import { SentenceAnalyzer } from './components/SentenceAnalyzer';
 import { SrsFlashcards } from './components/SrsFlashcards';
 import { StoryReader } from './components/StoryReader';
+import { AdminDashboard } from './components/AdminDashboard';
+import { AdminLoginModal } from './components/AdminLoginModal';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AppTab>('dashboard');
   const [currentJlpt, setCurrentJlpt] = useState<JlptLevel>('N5');
   const [isHandwritingModalOpen, setIsHandwritingModalOpen] = useState(false);
+
+  // Admin Auth States
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
 
   const [userStats, setUserStats] = useState<UserStats>({
     xp: 1250,
@@ -34,6 +40,28 @@ export const App: React.FC = () => {
     examsCompleted: 3,
     targetLevel: 'N3'
   });
+
+  const handleTabChange = (tab: AppTab) => {
+    if (tab === 'admin') {
+      if (!isAdminAuthenticated) {
+        setIsAdminModalOpen(true);
+      } else {
+        setActiveTab('admin');
+      }
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdminAuthenticated(true);
+    setActiveTab('admin');
+  };
+
+  const handleLogoutAdmin = () => {
+    setIsAdminAuthenticated(false);
+    setActiveTab('dashboard');
+  };
 
   const handleExamComplete = () => {
     setUserStats(prev => ({
@@ -60,7 +88,7 @@ export const App: React.FC = () => {
         {/* Left Navigation Sidebar */}
         <Sidebar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
         />
 
         {/* Main Content Area */}
@@ -68,7 +96,7 @@ export const App: React.FC = () => {
           {activeTab === 'dashboard' && (
             <Dashboard
               userStats={userStats}
-              onNavigateTab={setActiveTab}
+              onNavigateTab={handleTabChange}
               onOpenHandwritingModal={() => setIsHandwritingModalOpen(true)}
             />
           )}
@@ -104,6 +132,11 @@ export const App: React.FC = () => {
           {activeTab === 'sentence-analyzer' && <SentenceAnalyzer />}
           {activeTab === 'srs-flashcards' && <SrsFlashcards />}
           {activeTab === 'story-reader' && <StoryReader />}
+
+          {/* Admin Dashboard Page */}
+          {activeTab === 'admin' && (
+            <AdminDashboard onLogoutAdmin={handleLogoutAdmin} />
+          )}
         </main>
 
       </div>
@@ -112,6 +145,13 @@ export const App: React.FC = () => {
       <HandwrittenKanjiModal
         isOpen={isHandwritingModalOpen}
         onClose={() => setIsHandwritingModalOpen(false)}
+      />
+
+      {/* Admin Login Modal */}
+      <AdminLoginModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
+        onLoginSuccess={handleAdminLoginSuccess}
       />
 
     </div>
